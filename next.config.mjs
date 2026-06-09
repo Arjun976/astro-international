@@ -4,8 +4,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "localhost",
-        pathname: "/astro_v2/wp-content/uploads/**",
+        hostname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "**",
       },
     ],
   },

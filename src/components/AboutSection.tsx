@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { WPImage } from "@/types/wordpress";
 
 interface AboutSectionProps {
   image: {
