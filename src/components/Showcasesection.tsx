@@ -1,7 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+
+// Import Swiper styles
+import "swiper/css";
 
 interface ShowcaseImage {
   image: { url: string; alt: string };
@@ -12,23 +16,11 @@ interface ShowcaseSectionProps {
 }
 
 export default function ShowcaseSection({ images }: ShowcaseSectionProps) {
-  const swiperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Only run on client, after Swiper script is available
-    if (typeof window !== "undefined" && (window as any).Swiper) {
-      new (window as any).Swiper(".showcaseSwiper", {
-        slidesPerView: 3,
-        spaceBetween: 0,
-        loop: true,
-        autoplay: { delay: 2500, disableOnInteraction: false },
-      });
-    }
-  }, []);
+  if (!images || images.length === 0) return null;
 
   return (
     <section className="w-full overflow-hidden mb-0">
-      {/* Mobile Grid */}
+      {/* Mobile Grid: Exactly as it was */}
       <div className="grid grid-cols-3 md:hidden">
         {images.map((item, i) => (
           <div key={i} className="relative h-[128px]">
@@ -42,11 +34,21 @@ export default function ShowcaseSection({ images }: ShowcaseSectionProps) {
         ))}
       </div>
 
-      {/* Tablet Swiper */}
-      <div className="swiper showcaseSwiper hidden md:block xl:hidden" ref={swiperRef}>
-        <div className="swiper-wrapper">
+      {/* Tablet Swiper: Functional implementation for iPad (md to xl) */}
+      <div className="hidden md:block xl:hidden">
+        <Swiper
+          modules={[Autoplay]}
+          slidesPerView={3}
+          spaceBetween={0}
+          loop={true}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
+          className="showcaseSwiper"
+        >
           {images.map((item, i) => (
-            <div key={i} className="swiper-slide">
+            <SwiperSlide key={i}>
               <div className="relative h-[326px]">
                 <Image
                   src={item.image.url}
@@ -55,12 +57,12 @@ export default function ShowcaseSection({ images }: ShowcaseSectionProps) {
                   className="object-cover"
                 />
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
 
-      {/* Desktop Grid */}
+      {/* Desktop Grid: Exactly as it was */}
       <div
         className="hidden xl:grid"
         style={{ gridTemplateColumns: `repeat(${images.length}, 1fr)` }}
