@@ -47,7 +47,7 @@ export default function WhyChoose({
                 {title}
               </h2>
               <div className="space-y-6 text-gray-300 text-[16px] md:text-[18px] font-light leading-relaxed">
-                {paragraphs.map((p, i) => (
+                {paragraphs && Array.isArray(paragraphs) && paragraphs.map((p, i) => (
                   <p key={i}>{p.paragraph}</p>
                 ))}
               </div>

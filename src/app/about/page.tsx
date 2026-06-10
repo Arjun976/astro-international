@@ -26,12 +26,12 @@ export default async function AboutPage() {
 
       {ld.hero_section?.enable_about === "1" && (
         <HeroBanner
-          title={ld.hero_section.custom_title}
-          bannerBgUrl={ld.hero_section.banner_bg.url}
-          bannerBgAlt={ld.hero_section.banner_bg.alt}
+          title={ld.hero_section.custom_title || pageData.title}
+          bannerBgUrl={ld.hero_section.banner_bg?.url || "/image/placeholder.png"}
+          bannerBgAlt={ld.hero_section.banner_bg?.alt || ld.hero_section.custom_title}
           breadcrumb={[
             { label: "Home", href: "/" },
-            { label: ld.hero_section.custom_title, href: "/about" },
+            { label: ld.hero_section.custom_title || "About Us", href: "/about" },
           ]}
         />
       )}
@@ -39,17 +39,20 @@ export default async function AboutPage() {
       <main className="max-w-[1400px] mx-auto px-5 md:px-10">
         {ld.about_section?.enable_about === "1" && (
           <AboutSection
-            image={{ url: ld.about_section.about_image.url, alt: ld.about_section.about_image.alt }}
+            image={{ 
+              url: ld.about_section.about_image?.url || "/image/placeholder.png", 
+              alt: ld.about_section.about_image?.alt || ld.about_section.about_title 
+            }}
             label={ld.about_section.about_label}
             title={ld.about_section.about_title}
             description={ld.about_section.about_description}
-            points={ld.about_section.about_points}
-            buttonText={ld.about_section.about_button_text || "About Us"}
-            buttonLink={ld.about_section.about_button_link || "#"}
+            points={ld.about_section.about_points || []}
+            buttonText={ld.about_section.about_button_text}
+            buttonLink={ld.about_section.about_button_link}
           />
         )}
 
-        {ld.main_grid_section?.enable_main_grid === "1" && (
+        {ld.main_grid_section?.enable_main_grid === "1" && ld.main_grid_section.grid_items && (
           <HighlightsBar items={ld.main_grid_section.grid_items} />
         )}
 
@@ -58,7 +61,7 @@ export default async function AboutPage() {
             label={ld.partners_section.partners_label}
             title={ld.partners_section.partners_title}
             description={ld.partners_section.partners_description}
-            logos={ld.partners_section.partner_logos}
+            logos={ld.partners_section.partner_logos || []}
           />
         )}
       </main>
@@ -67,9 +70,15 @@ export default async function AboutPage() {
         <WhyChoose
           topText={ld.whychoose_section.why_choose_top_text}
           title={ld.whychoose_section.why_choose_title}
-          paragraphs={ld.whychoose_section.why_choose_paragraphs}
-          mainImage={{ url: ld.whychoose_section.why_choose_main_image.url, alt: ld.whychoose_section.why_choose_main_image.alt }}
-          bgImage={{ url: ld.whychoose_section.why_choose_bg_image.url, alt: ld.whychoose_section.why_choose_bg_image.alt }}
+          paragraphs={ld.whychoose_section.why_choose_paragraphs || []}
+          mainImage={{ 
+            url: ld.whychoose_section.why_choose_main_image?.url || "/image/placeholder.png", 
+            alt: ld.whychoose_section.why_choose_main_image?.alt || "" 
+          }}
+          bgImage={{ 
+            url: ld.whychoose_section.why_choose_bg_image?.url || "/image/placeholder.png", 
+            alt: ld.whychoose_section.why_choose_bg_image?.alt || "" 
+          }}
         />
       )}
 

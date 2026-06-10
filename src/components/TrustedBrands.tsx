@@ -22,6 +22,8 @@ export default function TrustedBrands({
   description,
   logos,
 }: TrustedBrandsProps) {
+  if (!logos || !Array.isArray(logos)) return null;
+
   return (
     <section className="py-[60px] md:py-[72px] lg:py-[80px] bg-[#F7F7F7] -mx-5 md:-mx-10 px-5 md:px-10">
       {/* Header */}

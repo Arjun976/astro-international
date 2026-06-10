@@ -9,6 +9,8 @@ interface WhyChooseCardsProps {
 }
 
 export default function WhyChooseCards({ cards }: WhyChooseCardsProps) {
+  if (!cards || !Array.isArray(cards)) return null;
+
   return (
     <section className="pb-[60px] md:pb-[72px] lg:pb-[90px]">
       <div className="max-w-[1400px] mx-auto px-5 md:px-10">

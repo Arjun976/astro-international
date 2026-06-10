@@ -9,6 +9,8 @@ interface HighlightsBarProps {
 }
 
 export default function HighlightsBar({ items }: HighlightsBarProps) {
+  if (!items || !Array.isArray(items)) return null;
+
   return (
     <section className="mb-12 md:mb-[110px] max-w-[1320px] mx-auto px-0">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-0 lg:gap-0 lg:divide-x lg:border border-[#026BAE66] divide-[#026BAE66] bg-white">

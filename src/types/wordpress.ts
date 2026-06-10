@@ -113,3 +113,28 @@ export interface AboutPageData {
   slug: string;
   layout_data: AboutLayoutData;
 }
+
+// ─── Global Data Types ───────────────────────────────────────────────────────
+
+export interface NavItem {
+  label: string;
+  url: string;
+}
+
+export interface NavMenus {
+  primary: NavItem[];
+  footer_quick: NavItem[];
+  footer_customer: NavItem[];
+}
+
+export interface SiteSettings {
+  phone: string;
+  email: string;
+  opening_hours: string;
+  request_quote_btn: string;
+  address: string;
+  footer_desc: string;
+  copyright_text: string;
+  facebook_url: string;
+  instagram_url: string;
+}

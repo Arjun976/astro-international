@@ -41,8 +41,10 @@ async function gqlFetch<T>(query: string): Promise<T> {
   return json;
 }
 
-function parseJson<T>(value: string | null | undefined, fallback: T): T {
+function parseJson<T>(value: unknown, fallback: T): T {
   if (!value) return fallback;
+  if (typeof value === "object") return value as T;
+  if (typeof value !== "string") return fallback;
   try {
     return JSON.parse(value);
   } catch {
@@ -53,7 +55,7 @@ function parseJson<T>(value: string | null | undefined, fallback: T): T {
 // ─── About Page ──────────────────────────────────────────────────────────────
 
 export async function getAboutPageData() {
-  const json = await gqlFetch<any>(ABOUT_PAGE_QUERY);
+  const json = await gqlFetch<{ data: { page: { id: string; title: string; slug: string; aboutCommonOptions: string } | null } }>(ABOUT_PAGE_QUERY);
   const page = json.data?.page;
   if (!page) throw new Error("About page not found");
 
@@ -61,7 +63,7 @@ export async function getAboutPageData() {
     id: page.id,
     title: page.title,
     slug: page.slug,
-    layout_data: parseJson(page.aboutCommonOptions, {}),
+    layout_data: parseJson(page.aboutCommonOptions, {} as Record<string, unknown>),
   };
 }
 
@@ -69,7 +71,7 @@ export async function getAboutPageData() {
 
 export async function getGlobalData() {
   try {
-    const json = await gqlFetch<any>(GLOBAL_DATA_QUERY);
+    const json = await gqlFetch<{ data: { astroSiteSettings: string; astroNavMenus: string } }>(GLOBAL_DATA_QUERY);
 
     const siteSettings = parseJson(json.data?.astroSiteSettings, null);
     const navMenus     = parseJson(json.data?.astroNavMenus, null);

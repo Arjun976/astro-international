@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface AboutSectionProps {
   image: {
@@ -9,6 +10,8 @@ interface AboutSectionProps {
   title: string;
   description: string;
   points: { point_text: string }[];
+  buttonText?: string;
+  buttonLink?: string;
 }
 
 export default function AboutSection({
@@ -17,6 +20,8 @@ export default function AboutSection({
   title,
   description,
   points,
+  buttonText,
+  buttonLink,
 }: AboutSectionProps) {
   return (
     <section className="py-16 md:py-24">
@@ -56,6 +61,17 @@ export default function AboutSection({
               </li>
             ))}
           </ul>
+
+          {buttonText && buttonLink && (
+            <div className="mt-4">
+              <Link
+                href={buttonLink}
+                className="inline-block bg-[#EC2226] text-white font-bold py-4 px-8 rounded-[3px] hover:bg-red-700 transition duration-300"
+              >
+                {buttonText}
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </section>
