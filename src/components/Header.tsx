@@ -3,42 +3,52 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import type { SiteSettings, NavMenus } from "@/types/wordpress";
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Building Materials", href: "/building-materials" },
-  { label: "Safety Products", href: "/safety-products" },
+// Fallback nav — used if WordPress menu is empty
+const DEFAULT_NAV = [
+  { label: "Home",               url: "/" },
+  { label: "About",              url: "/about" },
+  { label: "Building Materials", url: "/building-materials" },
+  { label: "Safety Products",    url: "/safety-products" },
 ];
 
-export default function Header({ activePage = "" }: { activePage?: string }) {
+interface HeaderProps {
+  activePage?:   string;
+  siteSettings?: SiteSettings | null;
+  navMenus?:     NavMenus | null;
+}
+
+export default function Header({
+  activePage = "",
+  siteSettings,
+  navMenus,
+}: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const phone           = siteSettings?.phone            || "+971 50 688 9285";
+  const email           = siteSettings?.email            || "info@astrotrading.ae";
+  const openingHours    = siteSettings?.opening_hours    || "Mon – Sat 8AM – 5PM";
+  const requestQuoteBtn = siteSettings?.request_quote_btn || "Request A Quote";
+
+  const navLinks = navMenus?.primary?.length
+    ? navMenus.primary
+    : DEFAULT_NAV;
 
   return (
     <header className="bg-white border-b border-[#026BAE]/40 sticky top-0 z-30">
       <div className="max-w-[1400px] mx-auto px-6 xl:px-10 h-[70px] xl:h-[100px] flex items-center justify-between">
-        {/* Hamburger (Mobile/Tablet) */}
+
+        {/* Hamburger */}
         <span className="xl:hidden order-1">
           <button
             aria-label="Toggle Menu"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="relative w-8 h-8 flex flex-col justify-center items-start gap-[6px] transition-all duration-300 text-[#026BAE]"
+            className="relative w-8 h-8 flex flex-col justify-center items-start gap-[6px] text-[#026BAE]"
           >
-            <span
-              className={`block h-[2px] w-full bg-current transition-all duration-300 ${
-                menuOpen ? "rotate-45 translate-y-[8px]" : ""
-              }`}
-            />
-            <span
-              className={`block h-[2px] w-full bg-current transition-all duration-300 ${
-                menuOpen ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`block h-[2px] w-5 bg-current transition-all duration-300 ${
-                menuOpen ? "-rotate-45 -translate-y-[8px] w-full" : ""
-              }`}
-            />
+            <span className={`block h-[2px] w-full bg-current transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[8px]" : ""}`} />
+            <span className={`block h-[2px] w-full bg-current transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`block h-[2px] w-5 bg-current transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[8px] w-full" : ""}`} />
           </button>
         </span>
 
@@ -57,13 +67,13 @@ export default function Header({ activePage = "" }: { activePage?: string }) {
 
         {/* Desktop Nav */}
         <div className="hidden xl:flex items-center gap-10 xl:order-2">
-          <nav className="flex gap-8 text-[16px] text-[#026BAE] font-semibold font-heading">
+          <nav className="flex gap-8 text-[16px] text-[#026BAE] font-semibold">
             {navLinks.map((link) => (
               <Link
-                key={link.href}
-                href={link.href}
+                key={link.url}
+                href={link.url}
                 className={`hover:text-[#014F82] transition duration-300 ${
-                  activePage === link.href
+                  activePage === link.url
                     ? "underline underline-offset-8 decoration-red-500"
                     : ""
                 }`}
@@ -75,32 +85,32 @@ export default function Header({ activePage = "" }: { activePage?: string }) {
         </div>
 
         {/* CTA Button */}
-        <div className="hidden xl:flex items-center gap-10 xl:order-3">
+        <div className="hidden xl:flex items-center xl:order-3">
           <button className="bg-[#EC2226] text-white px-4 py-2 rounded-[3px] text-[14px] font-bold tracking-wider hover:bg-red-700 transition duration-300">
-            Request A Quote
+            {requestQuoteBtn}
           </button>
         </div>
       </div>
 
-      {/* Info Bar (Desktop) */}
+      {/* Info Bar */}
       <div className="hidden lg:block bg-white text-[#026BAE] text-sm border-b border-[#026BAE]/20">
         <div className="max-w-[1400px] mx-auto px-10">
           <div className="grid grid-cols-4 divide-x divide-[#026BAE]/20 border-x border-[#026BAE]/20 h-[56px]">
             <div className="flex items-center justify-center gap-3">
               <i className="fa-solid fa-phone text-[16px]" />
-              <span className="font-medium">+971 50 688 9285</span>
+              <span className="font-medium">{phone}</span>
             </div>
             <div className="flex items-center justify-center gap-3">
               <i className="fa-solid fa-envelope text-[16px]" />
-              <span className="font-medium">info@astrotrading.ae</span>
+              <span className="font-medium">{email}</span>
             </div>
-            <div className="flex items-center justify-center gap-3 cursor-pointer hover:bg-[#026BAE]/5 transition duration-300">
+            <div className="flex items-center justify-center gap-3 cursor-pointer hover:bg-[#026BAE]/5 transition">
               <i className="fa-solid fa-location-dot text-[16px]" />
               <span className="font-medium">Find our store</span>
             </div>
             <div className="flex items-center justify-center gap-3">
               <i className="fa-solid fa-clock text-[16px]" />
-              <span className="font-medium">Mon – Sat 8AM – 5PM</span>
+              <span className="font-medium">{openingHours}</span>
             </div>
           </div>
         </div>
@@ -112,8 +122,8 @@ export default function Header({ activePage = "" }: { activePage?: string }) {
           <nav className="flex flex-col text-sm text-[#026BAE] font-medium">
             {navLinks.map((link) => (
               <Link
-                key={link.href}
-                href={link.href}
+                key={link.url}
+                href={link.url}
                 className="px-6 py-4 border-b hover:bg-[#026BAE]/5"
                 onClick={() => setMenuOpen(false)}
               >
@@ -122,7 +132,7 @@ export default function Header({ activePage = "" }: { activePage?: string }) {
             ))}
             <div className="px-6 py-4">
               <button className="w-full bg-[#EC2226] text-white py-3 rounded-[3px] text-sm font-bold tracking-wider">
-                Request A Quote
+                {requestQuoteBtn}
               </button>
             </div>
           </nav>

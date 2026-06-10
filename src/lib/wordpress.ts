@@ -3,7 +3,8 @@ const WP_BASE_URL =
 
 const GRAPHQL_ENDPOINT = `${WP_BASE_URL}/graphql`;
 
-// The GraphQL query — matches exactly what you ran in the IDE
+// ─── Queries ─────────────────────────────────────────────────────────────────
+
 const ABOUT_PAGE_QUERY = `
   query GetAboutPageLayoutData {
     page(id: "about", idType: URI) {
@@ -15,76 +16,81 @@ const ABOUT_PAGE_QUERY = `
   }
 `;
 
-export async function getAboutPageData() {
-  const res = await fetch(GRAPHQL_ENDPOINT, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ query: ABOUT_PAGE_QUERY }),
-    next: { revalidate: 3600 }, // ISR: revalidate every hour
-  });
-
-  if (!res.ok) {
-    throw new Error(`GraphQL request failed: ${res.status}`);
+const GLOBAL_DATA_QUERY = `
+  query GetGlobalData {
+    astroSiteSettings
+    astroNavMenus
   }
+`;
 
-  const json = await res.json();
+// ─── Helper ──────────────────────────────────────────────────────────────────
 
-  if (json.errors) {
-    throw new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`);
-  }
-
-  const page = json.data?.page;
-
-  if (!page) {
-    throw new Error("About page not found in GraphQL response");
-  }
-
-  // aboutCommonOptions comes back as a JSON string — parse it
-  const layoutData =
-    typeof page.aboutCommonOptions === "string"
-      ? JSON.parse(page.aboutCommonOptions)
-      : page.aboutCommonOptions;
-
-  return {
-    id: page.id,
-    title: page.title,
-    slug: page.slug,
-    layout_data: layoutData,
-  };
-}
-
-// Generic reusable fetcher for any page — for future pages
-export async function getPageData(slug: string) {
-  const query = `
-    query GetPageLayoutData($id: ID!) {
-      page(id: $id, idType: URI) {
-        id
-        title
-        slug
-        aboutCommonOptions
-      }
-    }
-  `;
-
+async function gqlFetch<T>(query: string): Promise<T> {
   const res = await fetch(GRAPHQL_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, variables: { id: slug } }),
+    body: JSON.stringify({ query }),
     next: { revalidate: 3600 },
   });
 
   if (!res.ok) throw new Error(`GraphQL request failed: ${res.status}`);
 
   const json = await res.json();
+  if (json.errors) throw new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`);
+
+  return json;
+}
+
+function parseJson<T>(value: string | null | undefined, fallback: T): T {
+  if (!value) return fallback;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
+// ─── About Page ──────────────────────────────────────────────────────────────
+
+export async function getAboutPageData() {
+  const json = await gqlFetch<any>(ABOUT_PAGE_QUERY);
   const page = json.data?.page;
-  if (!page) throw new Error(`Page not found: ${slug}`);
+  if (!page) throw new Error("About page not found");
 
-  const layoutData =
-    typeof page.aboutCommonOptions === "string"
-      ? JSON.parse(page.aboutCommonOptions)
-      : page.aboutCommonOptions;
+  return {
+    id: page.id,
+    title: page.title,
+    slug: page.slug,
+    layout_data: parseJson(page.aboutCommonOptions, {}),
+  };
+}
 
-  return { id: page.id, title: page.title, slug: page.slug, layout_data: layoutData };
+// ─── Global Data (site settings + nav menus) ─────────────────────────────────
+
+export async function getGlobalData() {
+  try {
+    const json = await gqlFetch<any>(GLOBAL_DATA_QUERY);
+
+    const siteSettings = parseJson(json.data?.astroSiteSettings, null);
+    const navMenus     = parseJson(json.data?.astroNavMenus, null);
+
+    return { siteSettings, navMenus };
+  } catch {
+    return { siteSettings: null, navMenus: null };
+  }
+}
+
+// ─── Everything together ─────────────────────────────────────────────────────
+
+export async function getAboutPageWithGlobalData() {
+  const [pageData, globalData] = await Promise.all([
+    getAboutPageData(),
+    getGlobalData(),
+  ]);
+
+  return {
+    pageData,
+    siteSettings: globalData.siteSettings,
+    navMenus:     globalData.navMenus,
+  };
 }
