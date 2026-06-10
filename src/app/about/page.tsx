@@ -1,5 +1,4 @@
-import { getPageData } from "@/lib/wordpress";
-import { AboutPageData } from "@/types/wordpress";
+import { getAboutPageData } from "@/lib/wordpress";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroBanner from "@/components/HeroBanner";
@@ -19,31 +18,20 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  // Fetch data from WordPress headless API
-  const data: AboutPageData = await getPageData("about");
-  const { layout_data } = data;
-
-  const {
-    hero_section,
-    about_section,
-    main_grid_section,
-    partners_section,
-    whychoose_section,
-    why_choose_cards_section,
-    showcase_section,
-    cta_section,
-  } = layout_data;
+  // Fetch via GraphQL
+  const data = await getAboutPageData();
+  const ld = data.layout_data;
 
   return (
     <>
       <Header activePage="/about" />
 
       {/* Hero Banner */}
-      {hero_section.enable_about === "1" && (
+      {ld.hero_section?.enable_about === "1" && (
         <HeroBanner
-          title={hero_section.custom_title}
-          bannerBgUrl={hero_section.banner_bg.url}
-          bannerBgAlt={hero_section.banner_bg.alt}
+          title={ld.hero_section.custom_title}
+          bannerBgUrl={ld.hero_section.banner_bg.url}
+          bannerBgAlt={ld.hero_section.banner_bg.alt}
           breadcrumb={[
             { label: "Home", href: "/" },
             { label: "About", href: "/about" },
@@ -51,72 +39,72 @@ export default async function AboutPage() {
         />
       )}
 
-      {/* Main Content Container */}
+      {/* Main Content */}
       <main className="max-w-[1400px] mx-auto px-5 md:px-10">
         {/* About Section */}
-        {about_section.enable_about === "1" && (
+        {ld.about_section?.enable_about === "1" && (
           <AboutSection
             image={{
-              url: about_section.about_image.url,
-              alt: about_section.about_image.alt,
+              url: ld.about_section.about_image.url,
+              alt: ld.about_section.about_image.alt,
             }}
-            label={about_section.about_label}
-            title={about_section.about_title}
-            description={about_section.about_description}
-            points={about_section.about_points}
+            label={ld.about_section.about_label}
+            title={ld.about_section.about_title}
+            description={ld.about_section.about_description}
+            points={ld.about_section.about_points}
           />
         )}
 
-        {/* Highlights / Main Grid */}
-        {main_grid_section.enable_main_grid === "1" && (
-          <HighlightsBar items={main_grid_section.grid_items} />
+        {/* Highlights Bar */}
+        {ld.main_grid_section?.enable_main_grid === "1" && (
+          <HighlightsBar items={ld.main_grid_section.grid_items} />
         )}
 
-        {/* Trusted Brands / Partners */}
-        {partners_section.enable_partners === "1" && (
+        {/* Trusted Brands */}
+        {ld.partners_section?.enable_partners === "1" && (
           <TrustedBrands
-            label={partners_section.partners_label}
-            title={partners_section.partners_title}
-            description={partners_section.partners_description}
-            logos={partners_section.partner_logos}
+            label={ld.partners_section.partners_label}
+            title={ld.partners_section.partners_title}
+            description={ld.partners_section.partners_description}
+            logos={ld.partners_section.partner_logos}
           />
         )}
       </main>
 
-      {/* Why Choose (full width) */}
-      {whychoose_section.enable_whychoose === "1" && (
+      {/* Why Choose */}
+      {ld.whychoose_section?.enable_whychoose === "1" && (
         <WhyChoose
-          topText={whychoose_section.why_choose_top_text}
-          title={whychoose_section.why_choose_title}
-          paragraphs={whychoose_section.why_choose_paragraphs}
+          topText={ld.whychoose_section.why_choose_top_text}
+          title={ld.whychoose_section.why_choose_title}
+          paragraphs={ld.whychoose_section.why_choose_paragraphs}
           mainImage={{
-            url: whychoose_section.why_choose_main_image.url,
-            alt: whychoose_section.why_choose_main_image.alt,
+            url: ld.whychoose_section.why_choose_main_image.url,
+            alt: ld.whychoose_section.why_choose_main_image.alt,
           }}
           bgImage={{
-            url: whychoose_section.why_choose_bg_image.url,
-            alt: whychoose_section.why_choose_bg_image.alt,
+            url: ld.whychoose_section.why_choose_bg_image.url,
+            alt: ld.whychoose_section.why_choose_bg_image.alt,
           }}
         />
       )}
 
       {/* Why Choose Cards */}
-      {why_choose_cards_section.enable_cards === "1" && (
-        <WhyChooseCards cards={why_choose_cards_section.cards} />
+      {ld.why_choose_cards_section?.enable_cards === "1" && (
+        <WhyChooseCards cards={ld.why_choose_cards_section.cards} />
       )}
 
-      {/* Showcase (full width) */}
-      {showcase_section.enable_showcase === "1" && (
-        <ShowcaseSection images={showcase_section.images} />
+      {/* Showcase */}
+      {ld.showcase_section?.enable_showcase === "1" && (
+        <ShowcaseSection images={ld.showcase_section.images} />
       )}
 
-      {/* CTA Banner */}
-      {cta_section.enable_cta === "1" && (
+      {/* CTA */}
+      {ld.cta_section?.enable_cta === "1" && (
         <CTABanner
-          heading={cta_section.cta_heading}
-          description={cta_section.cta_description}
-          buttonText={cta_section.cta_button_text}
-          buttonLink={cta_section.cta_button_link}
+          heading={ld.cta_section.cta_heading}
+          description={ld.cta_section.cta_description}
+          buttonText={ld.cta_section.cta_button_text}
+          buttonLink={ld.cta_section.cta_button_link}
         />
       )}
 
