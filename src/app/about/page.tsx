@@ -10,6 +10,7 @@ import WhyChooseCards from "@/components/WhyChooseCards";
 import ShowcaseSection from "@/components/ShowcaseSection";
 import CTABanner from "@/components/CTABanner";
 import type { Metadata } from "next";
+import type { AboutLayoutData } from "@/types/wordpress";
 
 export const metadata: Metadata = {
   title: "About Us | Astro International",
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function AboutPage() {
   const { pageData, siteSettings, navMenus } = await getAboutPageWithGlobalData();
-  const ld = pageData.layout_data;
+  const ld = pageData.layout_data as AboutLayoutData;
 
   return (
     <>
@@ -95,7 +96,7 @@ export default async function AboutPage() {
           heading={ld.cta_section.cta_heading}
           description={ld.cta_section.cta_description}
           buttonText={ld.cta_section.cta_button_text}
-          buttonLink="/contact"
+          buttonLink={ld.cta_section.cta_button_link || "/contact"}
         />
       )}
 

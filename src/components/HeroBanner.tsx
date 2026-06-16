@@ -14,12 +14,14 @@ export default function HeroBanner({
   bannerBgAlt,
   breadcrumb = [],
 }: HeroBannerProps) {
+  const safeBannerUrl = bannerBgUrl || "/image/placeholder.png";
+
   return (
     <section className="relative h-[300px] md:h-[425px] w-full overflow-hidden">
       {/* Background Image */}
       <Image
-        src={bannerBgUrl}
-        alt={bannerBgAlt}
+        src={safeBannerUrl}
+        alt={bannerBgAlt || title}
         fill
         className="object-cover"
         priority
@@ -37,21 +39,24 @@ export default function HeroBanner({
         </div>
 
         {/* Breadcrumb */}
-        {breadcrumb.length > 0 && (
+        {breadcrumb && breadcrumb.length > 0 && (
           <div className="absolute bottom-6 left-0 px-5 md:px-10">
             <p className="text-white text-sm md:text-base">
-              {breadcrumb.map((crumb, i) => (
-                <span key={crumb.href}>
-                  {i > 0 && " > "}
-                  {i < breadcrumb.length - 1 ? (
-                    <Link href={crumb.href} className="hover:underline">
-                      {crumb.label}
-                    </Link>
-                  ) : (
-                    <span>{crumb.label}</span>
-                  )}
-                </span>
-              ))}
+              {breadcrumb.map((crumb, i) => {
+                if (!crumb || !crumb.label) return null;
+                return (
+                  <span key={crumb.href || i}>
+                    {i > 0 && " > "}
+                    {i < breadcrumb.length - 1 && crumb.href ? (
+                      <Link href={crumb.href} className="hover:underline">
+                        {crumb.label}
+                      </Link>
+                    ) : (
+                      <span>{crumb.label}</span>
+                    )}
+                  </span>
+                );
+              })}
             </p>
           </div>
         )}

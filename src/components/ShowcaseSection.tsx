@@ -22,16 +22,19 @@ export default function ShowcaseSection({ images }: ShowcaseSectionProps) {
     <section className="w-full overflow-hidden mb-0">
       {/* Mobile Grid: Exactly as it was */}
       <div className="grid grid-cols-3 md:hidden">
-        {images.map((item, i) => (
-          <div key={i} className="relative h-[128px]">
-            <Image
-              src={item.image.url}
-              alt={item.image.alt || `Showcase ${i + 1}`}
-              fill
-              className="object-cover"
-            />
-          </div>
-        ))}
+        {images.map((item, i) => {
+          const imageUrl = item.image?.url || "/image/placeholder.png";
+          return (
+            <div key={i} className="relative h-[128px]">
+              <Image
+                src={imageUrl}
+                alt={item.image?.alt || `Showcase ${i + 1}`}
+                fill
+                className="object-cover"
+              />
+            </div>
+          );
+        })}
       </div>
 
       {/* Tablet Swiper: Functional implementation for iPad (md to xl) */}
@@ -47,18 +50,21 @@ export default function ShowcaseSection({ images }: ShowcaseSectionProps) {
           }}
           className="showcaseSwiper"
         >
-          {images.map((item, i) => (
-            <SwiperSlide key={i}>
-              <div className="relative h-[326px]">
-                <Image
-                  src={item.image.url}
-                  alt={item.image.alt || `Showcase ${i + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </SwiperSlide>
-          ))}
+          {images.map((item, i) => {
+            const imageUrl = item.image?.url || "/image/placeholder.png";
+            return (
+              <SwiperSlide key={i}>
+                <div className="relative h-[326px]">
+                  <Image
+                    src={imageUrl}
+                    alt={item.image?.alt || `Showcase ${i + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
 
@@ -67,16 +73,19 @@ export default function ShowcaseSection({ images }: ShowcaseSectionProps) {
         className="hidden xl:grid"
         style={{ gridTemplateColumns: `repeat(${images.length}, 1fr)` }}
       >
-        {images.map((item, i) => (
-          <div key={i} className="relative h-[326px]">
-            <Image
-              src={item.image.url}
-              alt={item.image.alt || `Showcase ${i + 1}`}
-              fill
-              className="object-cover"
-            />
-          </div>
-        ))}
+        {images.map((item, i) => {
+          const imageUrl = item.image?.url || "/image/placeholder.png";
+          return (
+            <div key={i} className="relative h-[326px]">
+              <Image
+                src={imageUrl}
+                alt={item.image?.alt || `Showcase ${i + 1}`}
+                fill
+                className="object-cover"
+              />
+            </div>
+          );
+        })}
       </div>
     </section>
   );

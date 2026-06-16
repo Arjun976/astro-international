@@ -52,6 +52,8 @@ export interface AboutLayoutData {
     about_title: string;
     about_description: string;
     about_points: { point_text: string }[];
+    about_button_text: string;
+    about_button_link: string;
   };
   main_grid_section: {
     enable_main_grid: string;
@@ -133,6 +135,19 @@ export interface SiteSettings {
   opening_hours: string;
   request_quote_btn: string;
   address: string;
+  footer_desc: string;
+  copyright_text: string;
+  facebook_url: string;
+  instagram_url: string;
+}
+
+export interface SiteSettings {
+  phone: string;
+  email: string;
+  address: string;
+  opening_hours: string;
+  closing_day: string;        // ← add this, it exists in your Codestar panel
+  request_quote_btn: string;
   footer_desc: string;
   copyright_text: string;
   facebook_url: string;

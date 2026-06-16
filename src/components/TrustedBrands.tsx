@@ -46,17 +46,20 @@ export default function TrustedBrands({
         <div className="overflow-x-auto md:overflow-visible">
           <div className="min-w-[700px] md:min-w-0">
             <div className="grid grid-cols-5 gap-x-10 gap-y-4 md:gap-y-6 items-center justify-items-center">
-              {logos.map((logo, i) => (
-                <div key={i} className="relative h-[60px] md:h-20 w-full flex items-center justify-center">
-                  <Image
-                    src={logo.logo_image.url}
-                    alt={logo.logo_image.alt || `Partner ${i + 1}`}
-                    width={Number(logo.logo_image.width) || 150}
-                    height={Number(logo.logo_image.height) || 100}
-                    className="max-h-[60px] md:max-h-20 w-auto object-contain grayscale hover:grayscale-0 transition duration-300"
-                  />
-                </div>
-              ))}
+              {logos.map((logo, i) => {
+                const logoUrl = logo.logo_image?.url || "/image/placeholder.png";
+                return (
+                  <div key={i} className="relative h-[60px] md:h-20 w-full flex items-center justify-center">
+                    <Image
+                      src={logoUrl}
+                      alt={logo.logo_image?.alt || `Partner ${i + 1}`}
+                      width={Number(logo.logo_image?.width) || 150}
+                      height={Number(logo.logo_image?.height) || 100}
+                      className="max-h-[60px] md:max-h-20 w-auto object-contain grayscale hover:grayscale-0 transition duration-300"
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
