@@ -1,6 +1,4 @@
-import { getAboutPageWithGlobalData } from "@/lib/wordpress";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { getAboutPageData } from "@/lib/wordpress";
 import HeroBanner from "@/components/HeroBanner";
 import AboutSection from "@/components/AboutSection";
 import HighlightsBar from "@/components/HighlightsBar";
@@ -18,13 +16,11 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const { pageData, siteSettings, navMenus } = await getAboutPageWithGlobalData();
+  const pageData = await getAboutPageData();
   const ld = pageData.layout_data as AboutLayoutData;
 
   return (
     <>
-      <Header activePage="/about" siteSettings={siteSettings} navMenus={navMenus} />
-
       {ld.hero_section?.enable_about === "1" && (
         <HeroBanner
           title={ld.hero_section.custom_title || pageData.title}
@@ -99,8 +95,6 @@ export default async function AboutPage() {
           buttonLink={ld.cta_section.cta_button_link || "/contact"}
         />
       )}
-
-      <Footer activePage="/about" siteSettings={siteSettings} navMenus={navMenus} />
     </>
   );
 }

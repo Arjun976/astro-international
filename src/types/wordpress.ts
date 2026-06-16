@@ -99,7 +99,7 @@ export interface AboutPageGraphQLResponse {
       id: string;
       title: string;
       slug: string;
-      aboutCommonOptions: string; // comes as a raw JSON string from WPGraphQL
+      aboutCommonOptions: string;
     };
   };
   extensions?: {
@@ -129,27 +129,27 @@ export interface NavMenus {
   footer_customer: NavItem[];
 }
 
-export interface SiteSettings {
-  phone: string;
-  email: string;
-  opening_hours: string;
-  request_quote_btn: string;
-  address: string;
-  footer_desc: string;
-  copyright_text: string;
-  facebook_url: string;
-  instagram_url: string;
+export interface SocialIcon {
+  social_icon_svg: string;
+  social_link: string;
 }
 
 export interface SiteSettings {
-  phone: string;
-  email: string;
-  address: string;
-  opening_hours: string;
-  closing_day: string;        // ← add this, it exists in your Codestar panel
-  request_quote_btn: string;
-  footer_desc: string;
-  copyright_text: string;
-  facebook_url: string;
-  instagram_url: string;
+  // Header / top bar
+  header_cta_text: string;
+  top_phone: string;
+  top_email: string;
+  top_hours: string;
+  top_location_text: string;
+  // Footer
+  footer_about_text: string;
+  footer_copyright_text: string;
+  footer_contact_address: string;
+  footer_contact_phone: string;
+  footer_contact_phone_two: string;
+  footer_contact_email: string;
+  footer_logo: WPImage;
+  header_logo: WPImage;
+  footer_whatsapp: string;
+  footer_social_icons: SocialIcon[];
 }

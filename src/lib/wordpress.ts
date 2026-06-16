@@ -77,7 +77,8 @@ export async function getGlobalData() {
     const navMenus     = parseJson(json.data?.astroNavMenus, null);
 
     return { siteSettings, navMenus };
-  } catch {
+  } catch (error) {
+    console.error("Error fetching global data from WordPress:", error);
     return { siteSettings: null, navMenus: null };
   }
 }
