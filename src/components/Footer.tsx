@@ -60,8 +60,8 @@ export default function Footer({
           <div className="flex flex-wrap items-center justify-between lg:block">
 
             <Image
-              src="/image/logo.png"
-              alt="Astro International"
+              src={siteSettings?.footer_logo?.url || "/image/logo.png"}
+              alt={siteSettings?.footer_logo?.alt || "Astro International"}
               width={200}
               height={80}
               className="h-10 md:h-20 object-contain mb-6 w-auto"

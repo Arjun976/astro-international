@@ -62,8 +62,8 @@ export default function Header({
         <div className="flex-shrink-0 order-2 xl:order-1">
           <Link href="/">
             <Image
-              src="/image/logo.png"
-              alt="Astro Trading"
+              src={siteSettings?.header_logo?.url || "/image/logo.png"}
+              alt={siteSettings?.header_logo?.alt || "Astro Trading"}
               width={160}
               height={45}
               className="h-[25px] md:h-[41px] lg:h-[45px] w-auto"
